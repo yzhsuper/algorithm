@@ -1,6 +1,8 @@
 package common.algorithm.graph;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 弗洛伊德最短路径算法
@@ -23,9 +25,10 @@ public class Floyd {
 		this.data = data;
 		length = data.length;
 		path = new int[length][length];
+		this.shortestPath();
 	}
 
-	public void shortestPath() {
+	private void shortestPath() {
 		int tmp;
 		for (int k = 0; k < length; k++) {
 			for (int x = 0; x < length; x++) {
@@ -42,14 +45,29 @@ public class Floyd {
 	}
 	
 	public void getShortestPath(int v, int w) {
+		boolean reverse = false;
+		if (v > w) {
+			reverse = true;
+			int a = v;
+			v = w;
+			w = a;
+		}
+		ArrayList<Integer> pathList = new ArrayList<Integer>(8);
 	    //求 0 到 3的最小路径
 	    int k = path[v][w];
-	    System.out.print("path: " + v);//打印起点
+	    pathList.add(v);
 	    while(k > 0){
-	        System.out.print("-> " + k);//打印中间点
+	    	pathList.add(k);
 	        k = path[k][w];
 	    }
-	    System.out.println("-> " + w);
+	    pathList.add(w);
+	    if (reverse) {
+	    	for (int i=pathList.size() - 1; i>=0; i--) {
+	    		System.out.print(pathList.get(i) + " ");
+	    	}
+	    } else {
+	    	System.out.println(pathList);
+	    }
 	}
 	
 	public void printArray(int[][] list) {

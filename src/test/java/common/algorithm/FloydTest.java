@@ -26,11 +26,10 @@ public class FloydTest {
 //			System.out.println(Arrays.toString(list[x]));
 //		}
 		Floyd ss = new Floyd(list);
-		ss.shortestPath();
 //		for (int x=0; x<list.length; x++) {
 //			System.out.println(Arrays.toString(list[x]));
 //		}
-		ss.getShortestPath(1, 6);
+		ss.getShortestPath(3, 0);
 	}
 
 }
