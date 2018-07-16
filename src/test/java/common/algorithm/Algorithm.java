@@ -10,19 +10,12 @@ public class Algorithm {
 	public void selectTest() {
 		SelectSort ss = new SelectSort();
 		list = ss.sorted(list);
-		for (int i=0; i< list.length; i++) {
-			System.out.println(list[i]);
-		}
 		
 	}
 	
-	@Test
-	public void bubbleTest() {
-		BubbleSort bs = new BubbleSort();
-		list = bs.sorted(list);
-		for (int i=0; i< list.length; i++) {
-			System.out.println(list[i]);
-		}
-		
-	}
+//	@Test
+//	public void bubbleTest() {
+//		BubbleSort bs = new BubbleSort();
+//		list = bs.sorted(list);
+//	}
 }
