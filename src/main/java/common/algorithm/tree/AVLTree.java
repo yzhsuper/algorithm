@@ -3,13 +3,12 @@ package common.algorithm.tree;
 import java.util.LinkedList;
 
 /**
+ * 平衡2叉树（AVL树）
+ * 任意一个节点，它的左右子树的差的绝对值一定小于2
  * @author yangzhuo
  */
 public class AVLTree {
 
-	private static final int LEFT = 1;
-	private static final int RIGHT = 2;
-	
 	private Node root;
 
 	public void insert(int data) {
@@ -51,7 +50,6 @@ public class AVLTree {
 	 * @param data
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	private void insertLoop(Node root, int data) {
 		Node node = root;
 		while(true) {
@@ -71,18 +69,15 @@ public class AVLTree {
 				}
 			}
 		}
-		System.out.println("before rotate------------------");
-		breadthFirstSearch();
 		rebuild(node, data);
-		System.out.println("after rotate------------------");
-		breadthFirstSearch();
 	}
 	
 	
 	/**
 	 * 插入后，检查平衡
+	 * balance: 平衡因子，左子树高度减去右子树高度
 	 * 不平衡节点的出现只可能出现在插入节点（叶子节点）的父辈节点上
-	 * @param node
+	 * @param node 插入节点父节点
 	 */
 	private void rebuild(Node node, int data) {
 		while (node != null) {
@@ -92,65 +87,69 @@ public class AVLTree {
 				// 左侧树高
 				if (node.left.data > data) {
 					// LL
-					fixBalance(node, RIGHT);
+					rightRotate(node);
 				} else {
 					// LR
-					fixBalance(node.left, LEFT);
-					breadthFirstSearch();
-					fixBalance(node, RIGHT);
+					leftRotate(node.left);
+					rightRotate(node);
 				}
 			} else if (balance == -2) {
 				if (node.right.data < data) {
 					// RR
-					fixBalance(node, LEFT);
+					leftRotate(node);
 				} else {
 					// RL
-					fixBalance(node.right, RIGHT);
-					fixBalance(node, LEFT);
+					rightRotate(node.right);
+					leftRotate(node);
 				}
 			}
-//			System.out.println(node + ", balance=" + node.getBalance());
 			node = node.parent;
 		}
-//		System.out.println("------------------");
 	}
 	
-	private void fixBalance(Node node, int type) {
-		if (type == LEFT) {
-			leftRotate(node);
-		} else {
-			rightRotate(node);
-		}
-	}
+//	private void fixBalance(Node node, int type) {
+//		if (type == LEFT) {
+//			leftRotate(node);
+//		} else {
+//			rightRotate(node);
+//		}
+//	}
 
-	private Node leftRotate(Node node) {
+	/**
+	 * 坐旋转，说明右子树比左子树高，node节点一定有右子树
+	 * 将node节点的右节点x升一级，将node挂在x的左节点
+	 * 将x以前的左节点挂在node的右节点
+	 * @param node node 表示失衡的节点
+	 */
+	private void leftRotate(Node node) {
 
 		Node x = node.right;
-		if (node == root) {
+
+		if (node.parent == null) {
+			// 父节点为null，node是根节点,旋转后x为新的根节点
 			root = x;
-		}
-		if (node.parent != null) {
+		} else {
 			node.parent.left = x;
 		}
 
 		Node tmp = x.left;
-
 		x.left = node;
 		node.right = tmp;
 
-		node.updateHeight();
-		x.updateHeight();
-
-		return x;
 	}
 
-	private Node rightRotate(Node node) {
-		Node x = node.left;
-		if (node == root) {
-			root = x;
-		}
 
-		if (node.parent != null) {
+	/**
+	 * 右旋转，说明左子树比右子树高，node节点一定有左子树
+	 * @param node 表示失衡的节点
+	 */
+	private void rightRotate(Node node) {
+		Node x = node.left;
+
+		if (node.parent == null) {
+			// 父节点为null，node是根节点,旋转后x为新的根节点
+			root = x;
+		} else {
 			node.parent.left = x;
 		}
 
@@ -159,9 +158,6 @@ public class AVLTree {
 		x.right = node;
 		node.left = tmp;
 
-		node.updateHeight();
-		x.updateHeight();
-		return x;
 	}
 
 	/**
@@ -280,18 +276,4 @@ public class AVLTree {
 		}
 	}
 
-	public static void main(String[] args) {
-//		, 8, 9, 1, 2
-//		int[] a = { 5, 4, 7, 6, 10, 8};
-		int[] a = { 5, 4, 7, 1, 2};
-		AVLTree tree = new AVLTree();
-		for (int i : a) {
-			tree.insert(i);
-		}
-//		tree.preOrder(tree.root);
-//		System.out.println("");
-//		tree.inOrder(tree.root);
-//		System.out.println("");
-//		tree.postOrder(tree.root);
-	}
 }
